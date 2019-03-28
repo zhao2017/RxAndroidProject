@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final String PATH = "http://a3.topitme.com/4/a4/53/1128058568ec753a44l.jpg";
     private static final String PATH1 = "http://pic69.nipic.com/file/20150608/9252150_134415115986_2.jpg";
+    private static final String PATH2 = "http://img02.tooopen.com/images/20150512/tooopen_sy_123903738291.jpg";
     @BindView(R.id.iv_src)
     ImageView ivSrc;
     @BindView(R.id.bt)
@@ -51,10 +52,13 @@ public class MainActivity extends AppCompatActivity {
         i++;
         Log.i(TAG, "name==" + Thread.currentThread().getName() + ";pid==" + Thread.currentThread().getId() + ";i==" + i);
         long time1 = System.currentTimeMillis();
-        if (isFirstCross&&i<2) {
-            MyAscyTask myAscyTask= new MyAscyTask();
-            myAscyTask.execute();
-
+        if (isFirstCross&&i<3) {
+            if(i==1){
+                MyAscyTask myAscyTask= new MyAscyTask();
+                myAscyTask.execute();
+            }else{
+                loadImageHttp();
+            }
         } else {
             if (i % 2 == 0) {
                 downLoadUtil.downLoadImage(PATH)
@@ -143,6 +147,27 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                 ivSrc.setImageBitmap(bitmap);
+            }
+        });
+    }
+
+
+    private void loadImageHttp(){
+        OkHttpClient okHttpClient = new OkHttpClient();
+        Request request = new Request.Builder().url(PATH2).build();
+        okHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    byte[] data = response.body().bytes();
+                    if (data != null) {
+                        runMainThread(data);
+                    }
+                }
             }
         });
     }
