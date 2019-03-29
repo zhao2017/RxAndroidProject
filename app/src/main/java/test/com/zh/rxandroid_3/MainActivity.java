@@ -34,12 +34,8 @@ public class MainActivity extends AppCompatActivity {
     ImageView ivSrc;
     @BindView(R.id.bt)
     Button bt;
-
     private DownLoadUtil downLoadUtil;
     int i = 0;
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
